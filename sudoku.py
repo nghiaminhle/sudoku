@@ -49,8 +49,9 @@ class Sudoku:
 def main():
     
     from example import hard2
+    from example import easy
     
-    sudoku = Sudoku(hard2)
+    sudoku = Sudoku(easy)
     
     start = time.time()
 
