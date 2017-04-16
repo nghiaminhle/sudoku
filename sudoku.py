@@ -1,4 +1,5 @@
 import time
+import example
 
 class Sudoku:
     a = []
@@ -16,69 +17,55 @@ class Sudoku:
     
     def run(self):
         self.solve(0)
+        return self.a
     
     def solve(self, cell_i):
+        if cell_i == self.cell_number - 1:
+            return True
         cell = self.missed_cells[cell_i]
         i = cell[0]
         j = cell[1]
-        for v in range(1,10):    
-            if self.row_not_has_value(i, v) and self.col_not_has_value(j,v) and self.area_not_has_value(i,j,v):
-                self.a[i][j] = v
-                if cell_i < self.cell_number - 1:
-                    self.solve(cell_i+1)
-                else:
-                    self.print_result()
+        candidates = self.get_candidate(i,j)
+        for v in range(1, 10):
+            if candidates[v]:
+                self.a[i][j] = v    
+                found = self.solve(cell_i+1)
+                if found:
+                    return found
         self.a[i][j] = 0
-
-    def row_not_has_value(self, i, v):
-        for j in range(9):
-            if self.a[i][j] == v:
-                return False
-        return True
-
-    def col_not_has_value(self, j, v):
-        for i in range(9):
-            if self.a[i][j] == v:
-                return False
-        return True
-
-    def area_not_has_value(self, i, j, v):
-        r = int(i/3)
-        c = int(j/3)
-        for i in range(3*r, 3*r+3):
-            for j in range(3*c, 3*c+3):
-                if self.a[i][j] == v:
-                    return False
-        return True
-
-    def print_result(self):
-        print("--------------")
-        for i in range(9):
-            print(self.a[i])
-
-
+        return False
+    
+    def get_candidate(self, i, j):
+        candidates = [True, True, True,True, True, True, True, True, True,True]
+        for k in range(9):
+            if self.a[i][k] != 0:
+                candidates[self.a[i][k]] = False
+            if self.a[k][j] != 0:
+                candidates[self.a[k][j]] = False
+        for i in range(3*(int(i/3)), 3*(int(i/3))+3):
+            for j in range(3*(int(j/3)), 3*(int(j/3))+3):
+                if self.a[i][j] != 0:
+                    candidates[self.a[i][j]] = False
+        return candidates
+        
 def main():
-    a = [
-        [0,0,5,0,9,0,0,0,1],
-        [0,0,0,0,0,2,0,7,3],
-        [7,6,0,0,0,8,2,0,0],
-        [0,1,2,0,0,9,0,0,4],
-        [0,0,0,2,0,3,0,0,0],
-        [3,0,0,1,0,0,9,6,0],
-        [0,0,1,9,0,0,0,5,8],
-        [9,7,0,5,0,0,0,0,0],
-        [5,0,0,0,3,0,7,0,0]
-    ]
-
-    sudoku = Sudoku(a)
+    
+    from example import hard2
+    
+    sudoku = Sudoku(hard2)
     
     start = time.time()
-    
-    sudoku.run()
+
+    result = sudoku.run()
     
     end = time.time()
 
     print(end-start)
+    print_result(result)
+
+def print_result(result):
+    for i in range(9):
+        print(result[i])    
 
 if __name__ == "__main__":
     main()
