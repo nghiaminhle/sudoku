@@ -38,10 +38,8 @@ class Sudoku:
     def get_candidate(self, i, j):
         candidates = [True, True, True,True, True, True, True, True, True,True]
         for k in range(9):
-            if self.a[i][k] != 0:
-                candidates[self.a[i][k]] = False
-            if self.a[k][j] != 0:
-                candidates[self.a[k][j]] = False
+            candidates[self.a[i][k]] = False
+            candidates[self.a[k][j]] = False
         for i in range(3*(int(i/3)), 3*(int(i/3))+3):
             for j in range(3*(int(j/3)), 3*(int(j/3))+3):
                 if self.a[i][j] != 0:
