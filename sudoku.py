@@ -20,7 +20,7 @@ class Sudoku:
         return self.a
     
     def solve(self, cell_i):
-        if cell_i == self.cell_number - 1:
+        if cell_i > self.cell_number - 1:
             return True
         cell = self.missed_cells[cell_i]
         i = cell[0]
@@ -40,17 +40,16 @@ class Sudoku:
         for k in range(9):
             candidates[self.a[i][k]] = False
             candidates[self.a[k][j]] = False
-        for i in range(3*(int(i/3)), 3*(int(i/3))+3):
-            for j in range(3*(int(j/3)), 3*(int(j/3))+3):
-                if self.a[i][j] != 0:
-                    candidates[self.a[i][j]] = False
+            candidates[self.a[3*int(i/3) + int(k/3)][3*int(j/3) + k%3]] = False
         return candidates
         
 def main():
-    
+    from example import hard1
     from example import hard2
     from example import easy
     
+    print_result(easy)
+    print("----------------")
     sudoku = Sudoku(easy)
     
     start = time.time()
