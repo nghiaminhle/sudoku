@@ -5,6 +5,7 @@ class Sudoku:
     a = []
     missed_cells = []
     cell_number = 0
+    count = 0
 
     def __init__(self, a):
         self.a = a
@@ -20,23 +21,25 @@ class Sudoku:
         return self.a
     
     def solve(self, cell_i):
+        self.count = self.count + 1
         if cell_i > self.cell_number - 1:
             return True
-        cell = self.missed_cells[cell_i]
-        i = cell[0]
-        j = cell[1]
+        i = self.missed_cells[cell_i][0]
+        j = self.missed_cells[cell_i][1]
         candidates = self.get_candidate(i,j)
+        #print(cell_i, i,j)
         for v in range(1, 10):
             if candidates[v]:
-                self.a[i][j] = v    
+                self.a[i][j] = v
                 found = self.solve(cell_i+1)
                 if found:
+                    #print(cell_i, i,j,v)
                     return found
         self.a[i][j] = 0
         return False
     
     def get_candidate(self, i, j):
-        candidates = [True, True, True,True, True, True, True, True, True,True]
+        candidates = [True, True, True,True, True, True, True, True, True, True]
         for k in range(9):
             candidates[self.a[i][k]] = False
             candidates[self.a[k][j]] = False
@@ -47,10 +50,11 @@ def main():
     from example import hard1
     from example import hard2
     from example import easy
+    from example import super_hard
     
-    print_result(easy)
+    print_result(super_hard)
     print("----------------")
-    sudoku = Sudoku(easy)
+    sudoku = Sudoku(super_hard)
     
     start = time.time()
 
@@ -58,7 +62,7 @@ def main():
     
     end = time.time()
 
-    print(end-start)
+    print(end-start, sudoku.count)
     print_result(result)
 
 def print_result(result):
