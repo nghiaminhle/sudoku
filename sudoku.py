@@ -17,21 +17,20 @@ class Sudoku:
 
     def run(self):
         self.count = 0
-        best_candidates = self.get_best_cell(0)
-        self.solve(0, best_candidates)
+        self.solve(0)
         return self.a
 
-    def solve(self, cell_i, candidates):
+    def solve(self, cell_i):
         self.count += 1
         if cell_i > self.cell_number - 1:
             return True
+        candidates = self.get_best_cell(cell_i)
         cell = self.missed_cells[cell_i]
         i = cell[0]
         j = cell[1]
         for v in candidates:
             self.a[i][j] = v
-            best_candidates = self.get_best_cell(cell_i + 1)
-            found = self.solve(cell_i + 1, best_candidates)
+            found = self.solve(cell_i + 1)
             if found:
                 return found
         self.a[i][j] = 0
