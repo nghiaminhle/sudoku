@@ -15,20 +15,22 @@ class Sudoku:
         self.cell_number = len(self.missed_cells)
 
     def run(self):
-        best_cell, best_candidates = self.get_best_cell(0)
+        self.count = 0
+        best_candidates = self.get_best_cell(0)
         self.solve(0, best_candidates)
         return self.a
 
     def solve(self, cell_i, candidates):
-        self.count = self.count + 1
+        self.count += 1
         if cell_i > self.cell_number - 1:
             return True
-        i = self.missed_cells[cell_i][0]
-        j = self.missed_cells[cell_i][1]
+        cell = self.missed_cells[cell_i]
+        i = cell[0]
+        j = cell[1]
         for v in candidates:
             self.a[i][j] = v
-            best_cell, best_candidates = self.get_best_cell(cell_i)
-            found = self.solve(cell_i + 1, candidates)
+            best_candidates = self.get_best_cell(cell_i + 1)
+            found = self.solve(cell_i + 1, best_candidates)
             if found:
                 return found
         self.a[i][j] = 0
@@ -47,7 +49,6 @@ class Sudoku:
     def get_best_cell(self, cell_i):
         if cell_i > self.cell_number - 1:
             return None, []
-        best_cell = None
         best_candidates = []
         best_cell_idx = -1
         best_candidates_count = 10
@@ -60,7 +61,6 @@ class Sudoku:
             candidates_count = len(candidates)
             if candidates_count <= best_candidates_count:
                 best_candidates = candidates
-                best_cell = cell
                 best_cell_idx = idx
                 best_candidates_count = candidates_count
             if candidates_count == 1:
@@ -69,7 +69,7 @@ class Sudoku:
         tmp = self.missed_cells[cell_i]
         self.missed_cells[cell_i] = self.missed_cells[best_cell_idx]
         self.missed_cells[best_cell_idx] = tmp
-        return best_cell, best_candidates
+        return best_candidates
 
 def main():
     from example import hard1
@@ -81,11 +81,11 @@ def main():
     print("----------------")
     sudoku = Sudoku(super_hard)
 
-    start = time.time()
+    start = time.clock()
 
     result = sudoku.run()
 
-    end = time.time()
+    end = time.clock()
 
     print(end-start, sudoku.count)
     print_result(result)
