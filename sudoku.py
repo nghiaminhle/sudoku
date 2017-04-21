@@ -13,6 +13,7 @@ class Sudoku:
                     self.missed_cells.append([i, j])
 
         self.cell_number = len(self.missed_cells)
+        self.best_candidate_threshold = 1
 
     def run(self):
         self.count = 0
@@ -63,7 +64,7 @@ class Sudoku:
                 best_candidates = candidates
                 best_cell_idx = idx
                 best_candidates_count = candidates_count
-            if candidates_count == 1:
+            if candidates_count <= self.best_candidate_threshold:
                 break
 
         tmp = self.missed_cells[cell_i]
