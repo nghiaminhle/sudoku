@@ -3,14 +3,26 @@ import time
 class Sudoku:
     missed_cells = []
     cell_number = 0
+    cell_candidate_number = []
     count = 0
+    rows = []
+    cols = []
+    areas = []
 
     def __init__(self, a):
         self.a = a
+        self.rows = [[True for x in range(10)] for y in range(10)] 
+        self.cols = [[True for x in range(10)] for y in range(10)] 
+        self.areas = [[True for x in range(10)] for y in range(10)] 
+
         for i in range(9):
             for j in range(9):
                 if a[i][j] == 0:
                     self.missed_cells.append([i, j])
+                else:
+                    self.rows[i][a[i][j]] = False
+                    self.cols[j][a[i][j]] = False
+                    self.areas[3*int(i/3)+int(j/3)][a[i][j]] = False
 
         self.cell_number = len(self.missed_cells)
         self.best_candidate_threshold = 1
@@ -30,19 +42,26 @@ class Sudoku:
         j = cell[1]
         for v in candidates:
             self.a[i][j] = v
+            self.rows[i][v] = False
+            self.cols[j][v] = False
+            self.areas[3*int(i/3)+int(j/3)][v] = False
+            
             if self.solve(cell_i + 1):
                 return True
+            
+            self.rows[i][v] = True
+            self.cols[j][v] = True
+            self.areas[3*int(i/3)+int(j/3)][v] = True
+
         self.a[i][j] = 0
         return False
 
     def get_candidate(self, i, j):
-        candidates = [True, True, True, True, True, True, True, True, True, True]
-        for k in range(9):
-            candidates[self.a[i][k]] = False
-            candidates[self.a[k][j]] = False
-            candidates[self.a[3*int(i/3) + int(k/3)][3*int(j/3) + k%3]] = False
+        candidates = []
+        for k in range(1,10):
+            if self.rows[i][k] and self.cols[j][k] and self.areas[3*int(i/3)+int(j/3)][k]:
+                candidates.append(k)
 
-        candidates = [k for k, v in enumerate(candidates) if v]
         return candidates
 
     def get_best_cell(self, cell_i):
@@ -77,8 +96,9 @@ def main():
     from example import super_hard
     from example import norvig1
     from example import norvig2
+    from example import norvig3
 
-    a = norvig2
+    a = easy
 
     print_result(a)
     print("----------------")
