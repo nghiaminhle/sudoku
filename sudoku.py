@@ -30,9 +30,8 @@ class Sudoku:
         j = cell[1]
         for v in candidates:
             self.a[i][j] = v
-            found = self.solve(cell_i + 1)
-            if found:
-                return found
+            if self.solve(cell_i + 1):
+                return True
         self.a[i][j] = 0
         return False
 
