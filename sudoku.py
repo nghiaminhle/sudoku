@@ -3,14 +3,27 @@ import time
 class Sudoku:
     missed_cells = []
     cell_number = 0
+    cell_candidate_number = []
     count = 0
+    rows = []
+    cols = []
+    areas = []
 
     def __init__(self, a):
         self.a = a
+        self.rows = [0 for x in range(9)]
+        self.cols = [0 for x in range(9)]
+        self.areas = [0 for x in range(9)]
+
         for i in range(9):
             for j in range(9):
                 if a[i][j] == 0:
                     self.missed_cells.append([i, j])
+                else:
+                    bits = 1<<a[i][j]
+                    self.rows[i] = self.rows[i] | bits
+                    self.cols[j] = self.cols[j] | bits
+                    self.areas[3*int(i/3)+int(j/3)] = self.areas[3*int(i/3)+int(j/3)] | bits
 
         self.cell_number = len(self.missed_cells)
         self.best_candidate_threshold = 1
@@ -30,20 +43,23 @@ class Sudoku:
         j = cell[1]
         for v in candidates:
             self.a[i][j] = v
+
+            bits = 1<<v
+            
+            self.rows[i] = self.rows[i] | bits
+            self.cols[j] = self.cols[j] | bits
+            self.areas[3*int(i/3)+int(j/3)] = self.areas[3*int(i/3)+int(j/3)] | bits
+            
             if self.solve(cell_i + 1):
                 return True
+
+            bits = ~bits
+            self.rows[i] = self.rows[i] & bits
+            self.cols[j] = self.cols[j] & bits
+            self.areas[3*int(i/3)+int(j/3)] = self.areas[3*int(i/3)+int(j/3)] & bits
+
         self.a[i][j] = 0
         return False
-
-    def get_candidate(self, i, j):
-        candidates = [True, True, True, True, True, True, True, True, True, True]
-        for k in range(9):
-            candidates[self.a[i][k]] = False
-            candidates[self.a[k][j]] = False
-            candidates[self.a[3*int(i/3) + int(k/3)][3*int(j/3) + k%3]] = False
-
-        candidates = [k for k, v in enumerate(candidates) if v]
-        return candidates
 
     def get_best_cell(self, cell_i):
         if cell_i > self.cell_number - 1:
@@ -56,7 +72,13 @@ class Sudoku:
                 continue
             i = cell[0]
             j = cell[1]
-            candidates = self.get_candidate(i, j)
+            candidates = []
+            candidates_count = 0
+            
+            for k in range(1,10):
+                bits = 1<<k
+                if (not self.rows[i] & bits) and (not self.cols[j] & bits) and (not self.areas[3*int(i/3)+int(j/3)] & bits):
+                    candidates.append(k)
             candidates_count = len(candidates)
             if candidates_count <= best_candidates_count:
                 best_candidates = candidates
@@ -77,8 +99,9 @@ def main():
     from example import super_hard
     from example import norvig1
     from example import norvig2
+    from example import norvig3
 
-    a = norvig2
+    a = super_hard
 
     print_result(a)
     print("----------------")
