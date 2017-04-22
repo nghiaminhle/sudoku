@@ -36,13 +36,16 @@ class Sudoku:
         return False
 
     def get_candidate(self, i, j):
-        candidates = [True, True, True, True, True, True, True, True, True, True]
+        checks = 0
         for k in range(9):
-            candidates[self.a[i][k]] = False
-            candidates[self.a[k][j]] = False
-            candidates[self.a[3*int(i/3) + int(k/3)][3*int(j/3) + k%3]] = False
+            checks = checks | (1<<self.a[i][k])
+            checks = checks | (1<<self.a[k][j])
+            checks = checks | (1<<self.a[3*int(i/3) + int(k/3)][3*int(j/3) + k%3])
 
-        candidates = [k for k, v in enumerate(candidates) if v]
+        candidates = []
+        for i in range(1,10):
+            if not checks & (1<<i):
+                candidates.append(i)
         return candidates
 
     def get_best_cell(self, cell_i):
@@ -77,8 +80,9 @@ def main():
     from example import super_hard
     from example import norvig1
     from example import norvig2
+    from example import norvig3
 
-    a = norvig2
+    a = hard1
 
     print_result(a)
     print("----------------")
