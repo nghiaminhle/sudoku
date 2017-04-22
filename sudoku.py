@@ -63,8 +63,8 @@ class Sudoku:
                 best_candidates = candidates
                 best_cell_idx = idx
                 best_candidates_count = candidates_count
-            if candidates_count <= self.best_candidate_threshold:
-                break
+                if candidates_count <= self.best_candidate_threshold:
+                    break
 
         tmp = self.missed_cells[cell_i]
         self.missed_cells[cell_i] = self.missed_cells[best_cell_idx]
