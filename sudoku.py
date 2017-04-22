@@ -11,9 +11,9 @@ class Sudoku:
 
     def __init__(self, a):
         self.a = a
-        self.rows = [0 for x in range(10)]
-        self.cols = [0 for x in range(10)]
-        self.areas = [0 for x in range(10)]
+        self.rows = [0 for x in range(9)]
+        self.cols = [0 for x in range(9)]
+        self.areas = [0 for x in range(9)]
 
         for i in range(9):
             for j in range(9):
