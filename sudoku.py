@@ -52,6 +52,7 @@ class Sudoku:
             
             if self.solve(cell_i + 1):
                 return True
+
             bits = ~bits
             self.rows[i] = self.rows[i] & bits
             self.cols[j] = self.cols[j] & bits
@@ -78,8 +79,7 @@ class Sudoku:
                 bits = 1<<k
                 if (not self.rows[i] & bits) and (not self.cols[j] & bits) and (not self.areas[3*int(i/3)+int(j/3)] & bits):
                     candidates.append(k)
-                    candidates_count +=1
-
+            candidates_count = len(candidates)
             if candidates_count <= best_candidates_count:
                 best_candidates = candidates
                 best_cell_idx = idx
