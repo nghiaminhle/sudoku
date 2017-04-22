@@ -13,26 +13,25 @@ class Sudoku:
                     self.missed_cells.append([i, j])
 
         self.cell_number = len(self.missed_cells)
+        self.best_candidate_threshold = 1
 
     def run(self):
         self.count = 0
-        best_candidates = self.get_best_cell(0)
-        self.solve(0, best_candidates)
+        self.solve(0)
         return self.a
 
-    def solve(self, cell_i, candidates):
+    def solve(self, cell_i):
         self.count += 1
         if cell_i > self.cell_number - 1:
             return True
+        candidates = self.get_best_cell(cell_i)
         cell = self.missed_cells[cell_i]
         i = cell[0]
         j = cell[1]
         for v in candidates:
             self.a[i][j] = v
-            best_candidates = self.get_best_cell(cell_i + 1)
-            found = self.solve(cell_i + 1, best_candidates)
-            if found:
-                return found
+            if self.solve(cell_i + 1):
+                return True
         self.a[i][j] = 0
         return False
 
@@ -63,8 +62,8 @@ class Sudoku:
                 best_candidates = candidates
                 best_cell_idx = idx
                 best_candidates_count = candidates_count
-            if candidates_count == 1:
-                break
+                if candidates_count <= self.best_candidate_threshold:
+                    break
 
         tmp = self.missed_cells[cell_i]
         self.missed_cells[cell_i] = self.missed_cells[best_cell_idx]
