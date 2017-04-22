@@ -51,10 +51,14 @@ def main():
     from example import hard2
     from example import easy
     from example import super_hard
-    
-    print_result(super_hard)
+    from example import norvig1
+    from example import norvig2
+    from example import norvig3
+
+    a = norvig3
+    print_result(a)
     print("----------------")
-    sudoku = Sudoku(super_hard)
+    sudoku = Sudoku(a)
     
     start = time.time()
 
