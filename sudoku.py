@@ -67,9 +67,9 @@ class Sudoku:
         best_candidates = []
         best_cell_idx = -1
         best_candidates_count = 10
-        for idx, cell in enumerate(self.missed_cells):
-            if idx < cell_i:
-                continue
+        #for idx, cell in enumerate(self.missed_cells):
+        for idx in range(cell_i, self.cell_number):
+            cell = self.missed_cells[idx]
             i = cell[0]
             j = cell[1]
             candidates = []
