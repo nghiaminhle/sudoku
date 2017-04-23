@@ -3,7 +3,6 @@ import time
 class Sudoku:
     missed_cells = []
     cell_number = 0
-    cell_candidate_number = []
     count = 0
     rows = []
     cols = []
@@ -42,10 +41,10 @@ class Sudoku:
         i = cell[0]
         j = cell[1]
         for v in range(1,10):
-            bits = 1<<v
-            if candidates & bits:
+            if candidates & (1<<v):
                 self.a[i][j] = v
                 self.flag(i,j,v)
+                
                 if self.solve(cell_i + 1):
                     return True
                 self.unflag(i,j,v)
@@ -105,7 +104,7 @@ def main():
     from example import norvig2
     from example import norvig3 # very hard, still can not be solved
 
-    a = norvig2
+    a = super_hard
 
     print_result(a)
     print("----------------")
