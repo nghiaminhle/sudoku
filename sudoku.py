@@ -45,21 +45,10 @@ class Sudoku:
             bits = 1<<v
             if candidates & bits:
                 self.a[i][j] = v
-
-                bits = 1<<v
-                
-                self.rows[i] = self.rows[i] | bits
-                self.cols[j] = self.cols[j] | bits
-                self.areas[3*int(i/3)+int(j/3)] = self.areas[3*int(i/3)+int(j/3)] | bits
-                
+                self.flag(i,j,v)
                 if self.solve(cell_i + 1):
                     return True
-
-                bits = ~bits
-
-                self.rows[i] = self.rows[i] & bits
-                self.cols[j] = self.cols[j] & bits
-                self.areas[3*int(i/3)+int(j/3)] = self.areas[3*int(i/3)+int(j/3)] & bits
+                self.unflag(i,j,v)
 
         self.a[i][j] = 0
         return False
@@ -94,6 +83,18 @@ class Sudoku:
         self.missed_cells[best_cell_idx] = tmp
         
         return best_candidates
+    
+    def flag(self, i, j, bitPos):
+        bits = 1<<bitPos
+        self.rows[i] = self.rows[i] | bits
+        self.cols[j] = self.cols[j] | bits
+        self.areas[3*int(i/3)+int(j/3)] = self.areas[3*int(i/3)+int(j/3)] | bits
+    
+    def unflag(self, i, j, bitPos):
+        bits = ~(1<<bitPos)
+        self.rows[i] = self.rows[i] & bits
+        self.cols[j] = self.cols[j] & bits
+        self.areas[3*int(i/3)+int(j/3)] = self.areas[3*int(i/3)+int(j/3)] & bits
 
 def main():
     from example import hard1
@@ -102,9 +103,9 @@ def main():
     from example import super_hard
     from example import norvig1
     from example import norvig2
-    from example import norvig3
+    from example import norvig3 # very hard, still can not be solved
 
-    a = hard2
+    a = norvig2
 
     print_result(a)
     print("----------------")
